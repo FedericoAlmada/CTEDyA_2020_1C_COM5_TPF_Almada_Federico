@@ -122,6 +122,16 @@ namespace juegoIA
 			}			
 		}
 
+        public void setFuncionH(int valor)
+        {
+            this.valor = valor;
+        }
+
+        public int getFuncionH()
+        {
+            return valor;
+        }
+
 		public void porNiveles()
 		{
 			Cola<ArbolGeneral<T>> c  = new Cola<ArbolGeneral<T>>();

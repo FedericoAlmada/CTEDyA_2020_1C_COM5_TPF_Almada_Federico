@@ -5,18 +5,18 @@ using System.Linq;
 namespace juegoIA
 {
 	public class ComputerPlayer: Jugador
-	{		
+	{
+        ArbolGeneral<int> miniMax = new ArbolGeneral<int>(0);	
 		public ComputerPlayer(){}
 	
 		public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
 		{
-            ArbolGeneral<int> miniMax = new ArbolGeneral<int>(0);
             bool turnoHumano = false;
             Estado estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
 			createArbol(estado, miniMax);
 		}
 		
-		public int createArbol(Estado estado, ArbolGeneral<int> raiz)
+		private int createArbol(Estado estado, ArbolGeneral<int> raiz)
 		{
             // Declaro una lista vacia de cartas, las cuales serán utilizadas en este metodo.
             List<int> cartas = new List<int>();
@@ -35,59 +35,90 @@ namespace juegoIA
 
                 // Agrego cada subarbol al arbol MiniMax.
                 raiz.agregarHijo(hijo);
-                
-                // Actualizo estado nuevo de la jugada.
-                Estado nuevoEstado;
-
-                int nuevoLimite = estado.getLimite() - carta;
-                estado.setLimite(nuevoLimite);
 
                 // Creo una nueva lista de cartas y elimino la carta.
                 List<int> nuevasCartas = new List<int>();
                 nuevasCartas.AddRange(cartas);
                 nuevasCartas.Remove(carta);
 
-                // Actualizo el nuevo estado de la jugada dependiendo el turno actual.
-                if (estado.getTurnoH())
+                // Actualizo el limite de la jugada
+                estado.setLimite(estado.getLimite() - carta);
+                Estado nuevoEstado;
+                if (estado.getLimite() >= 0)
                 {
-                    bool turnoH = false;
-                    nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartas, nuevoLimite, turnoH);
-                }
-                else
-                {
-                    bool turnoH = true;
-                    nuevoEstado = new Estado(nuevasCartas, estado.getCartasH(), nuevoLimite, turnoH);
-                }
+                    if(!estado.getTurnoH())
+                    {
+                        bool turnoH = false;
+                        nuevoEstado = new Estado(nuevasCartas, estado.getCartasH(), estado.getLimite(), turnoH); 
 
-                // Caso base, asignación de la Función Heuristica.
-                if (estado.getLimite() < 0)
-                {
-                    if (estado.getTurnoH())
-                        hijo.setFuncionH(1);
+                        int res = createArbol(nuevoEstado, miniMax);
+
+                        if (res > hijo.getFuncionH())
+                            hijo.setFuncionH(res);
+                    }
                     else
-                        hijo.setFuncionH(-1);
+                    {
+                        bool turnoH = false;
+                        nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartas, estado.getLimite(), turnoH); 
 
+                        int res = createArbol(nuevoEstado, miniMax);
+
+                        if(res > hijo.getFuncionH())
+                        hijo.setFuncionH(res);
+                    }
                 }
-                // Caso recursivo.
                 else
                 {
-                    createArbol(nuevoEstado, hijo);
+                    if(!estado.getTurnoH())
+                    {
+                        hijo.setFuncionH(-1);
+                        return hijo.getFuncionH();
+                    }
+                    else
+                    {
+                        hijo.setFuncionH(1);
+                        return hijo.getFuncionH();
+                    }
                 }
             }
-            return 0;
+            return miniMax.getFuncionH();
 		}
-		
+
+        public void agregarNodo() 
+        {
+            // A implementar
+        }
 		
 		public override int descartarUnaCarta()
 		{
-			//Implementar
-			return 0;
+            Console.WriteLine("Naipes disponibles (IA): ");
+            return _descartarUnaCarta(miniMax);
 		}
+
+        private int _descartarUnaCarta(ArbolGeneral<int> raiz)
+        {
+            ArbolGeneral<int> hijoMax = new ArbolGeneral<int>(1);
+
+            List<ArbolGeneral<int>> hijos = raiz.getHijos();
+            int maxFH = 0;
+
+            foreach (var hijo in hijos)
+            {
+                if (hijo.getFuncionH() >= maxFH)
+                {
+                    maxFH = hijo.getFuncionH();
+                    hijoMax = hijo;
+                    Console.Write("[C: " + hijoMax.getDatoRaiz().ToString() + "]" + "[FH: " + hijoMax.getFuncionH().ToString() + "]");
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine("La IA ha lanzado la carta: " + hijoMax.getDatoRaiz().ToString());
+            return hijoMax.getDatoRaiz();
+        }
 		
 		public override void cartaDelOponente(int carta)
 		{
-			//implementar
-			
+            Console.WriteLine("\nEl humano ha lanzado la carta: " + carta.ToString());
 		}
 		
 	}

@@ -21,18 +21,20 @@ namespace juegoIA
 		{
             if (estado.getTurnoH())
             {
-                foreach (int cartaH in estado.getCartasH())
+                foreach(var cartaH in estado.getCartasH())
                 {
                     Carta carta = new Carta(cartaH, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
                     raiz.agregarHijo(hijo);
-                    if (estado.getLimite() > 0)
+
+                    if (estado.getLimite() > 0 && estado.getCartasH().Count > 0)
                     {
-                        Estado nuevoEstado = new Estado();
-                        nuevoEstado.setLimite(estado.getLimite() - cartaH);
-                        nuevoEstado.setCartasH(estado.getCartasH());
-                        nuevoEstado.getCartasH().Remove(cartaH);
-                        nuevoEstado.setTurnoH(false);
+                        List<int> nuevasCartas = new List<int>();
+                        nuevasCartas.AddRange(estado.getCartasH());
+                        nuevasCartas.Remove(cartaH);
+
+                        int nuevoLimite = (estado.getLimite() - cartaH);
+                        Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartas, nuevoLimite, false);
                         this.createArbol(nuevoEstado, raiz);
                     }
                     else
@@ -48,13 +50,14 @@ namespace juegoIA
                     Carta carta = new Carta(cartaIA, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
                     raiz.agregarHijo(hijo);
-                    if (estado.getLimite() > 0)
+                    if (estado.getLimite() > 0 && estado.getCartasIA().Count > 0)
                     {
-                        Estado nuevoEstado = new Estado();
-                        nuevoEstado.setLimite(estado.getLimite() - cartaIA);
-                        nuevoEstado.setCartasIA(estado.getCartasIA());
-                        nuevoEstado.getCartasIA().Remove(cartaIA);
-                        nuevoEstado.setTurnoH(true);
+                        List<int> nuevasCartas = new List<int>();
+                        nuevasCartas.AddRange(estado.getCartasIA());
+                        nuevasCartas.Remove(cartaIA);
+
+                        int nuevoLimite = (estado.getLimite() - cartaIA);
+                        Estado nuevoEstado = new Estado(nuevasCartas, estado.getCartasH(), nuevoLimite, true);
                         this.createArbol(nuevoEstado, raiz);
                     }
                     else
@@ -74,11 +77,16 @@ namespace juegoIA
 
         private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
         {
-            int funcHeuristicaMax = 0;
+            int cartaIA = 0;
             foreach (ArbolGeneral<Carta> hijo in raiz.getHijos())
             {
-                //Implementado metodo de descarte
+                if (hijo.getDatoRaiz().getFuncHeursitica() == 1)
+                {
+                    cartaIA = hijo.getDatoRaiz().getCarta();
+                    break;
+                }
             }
+            return cartaIA;
         }
 		
 		public override void cartaDelOponente(int cartaH)

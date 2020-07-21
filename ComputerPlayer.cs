@@ -15,28 +15,29 @@ namespace juegoIA
 		{
             bool turnoHumano = true;
             estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
-			createArbol(estado, miniMax);
+			createArbol(estado);
 		}
-		
-		private ArbolGeneral<Carta> createArbol(Estado estado, ArbolGeneral<Carta> raiz)
-		{
+
+        private void createArbol(Estado estado)
+        {
             if (estado.getTurnoH())
             {
-                foreach(var cartaH in estado.getCartasH())
+                foreach (int cartaH in estado.getCartasH())
                 {
                     Carta carta = new Carta(cartaH, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
-                    raiz.agregarHijo(hijo);
+                    miniMax.agregarHijo(hijo);
 
-                    if (estado.getLimite() > 0 && estado.getCartasH().Count > 0)
+                    List<int> nuevasCartasH = new List<int>();
+                    nuevasCartasH.AddRange(estado.getCartasH());
+                    nuevasCartasH.Remove(cartaH);
+
+                    int nuevoLimite = estado.getLimite() - cartaH;
+
+                    if (estado.getLimite() > 0)
                     {
-                        List<int> nuevasCartas = new List<int>();
-                        nuevasCartas.AddRange(estado.getCartasH());
-                        nuevasCartas.Remove(cartaH);
-
-                        int nuevoLimite = (estado.getLimite() - cartaH);
-                        Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartas, nuevoLimite, false);
-                        this.createArbol(nuevoEstado, raiz);
+                        Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
+                        createArbol(nuevoEstado);
                     }
                     else
                     {
@@ -50,16 +51,18 @@ namespace juegoIA
                 {
                     Carta carta = new Carta(cartaIA, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
-                    raiz.agregarHijo(hijo);
-                    if (estado.getLimite() > 0 && estado.getCartasIA().Count > 0)
-                    {
-                        List<int> nuevasCartas = new List<int>();
-                        nuevasCartas.AddRange(estado.getCartasIA());
-                        nuevasCartas.Remove(cartaIA);
+                    miniMax.agregarHijo(hijo);
 
-                        int nuevoLimite = (estado.getLimite() - cartaIA);
-                        Estado nuevoEstado = new Estado(nuevasCartas, estado.getCartasH(), nuevoLimite, true);
-                        this.createArbol(nuevoEstado, raiz);
+                    List<int> nuevasCartasIA = new List<int>();
+                    nuevasCartasIA.AddRange(estado.getCartasIA());
+                    nuevasCartasIA.Remove(cartaIA);
+
+                    int nuevoLimite = estado.getLimite() - cartaIA;
+
+                    if (estado.getLimite() > 0)
+                    {
+                        Estado nuevoEstado = new Estado(nuevasCartasIA, estado.getCartasH(), nuevoLimite, true);
+                        createArbol(nuevoEstado);
                     }
                     else
                     {
@@ -67,7 +70,6 @@ namespace juegoIA
                     }
                 }
             }
-            return miniMax;
         }
 
         public override int descartarUnaCarta()
@@ -89,28 +91,10 @@ namespace juegoIA
 			}
             return arbolAux.getDatoRaiz().getCarta();
 		}
-/*
 
-            //Console.Write("Cartas IA: " + estado.getCartasIA().ToString());
-            int cartaMax = 0;
-            ArbolGeneral<Carta> arbolAux = null;
-
-            foreach (ArbolGeneral<Carta> hijo in miniMax.getHijos())
-            {
-                if (hijo.getDatoRaiz().getCarta() > cartaMax)
-                {
-                    cartaMax = hijo.getDatoRaiz().getFuncHeursitica();
-                    arbolAux = hijo;
-                }
-            }
-            miniMax = arbolAux;
-            return miniMax.getDatoRaiz().getCarta();
-        }
- */
 		public override void cartaDelOponente(int cartaH)
 		{
             Console.WriteLine("\nEl humano ha lanzado la carta: " + cartaH.ToString());
-
             foreach (ArbolGeneral<Carta> hijo in miniMax.getHijos())
             {
                 if (hijo.getDatoRaiz().getCarta() == cartaH)

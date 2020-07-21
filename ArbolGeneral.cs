@@ -6,7 +6,6 @@ namespace juegoIA
 	public class ArbolGeneral<T>
 	{	
 		private NodoGeneral<T> raiz;
-		private int valor;
 		
 		public ArbolGeneral(T dato) 
 		{
@@ -121,16 +120,6 @@ namespace juegoIA
 				Console.Write(" " + this.getDatoRaiz());
 			}			
 		}
-
-        public void setFuncionH(int valor)
-        {
-            this.valor = valor;
-        }
-
-        public int getFuncionH()
-        {
-            return valor;
-        }
 
 		public void porNiveles()
 		{

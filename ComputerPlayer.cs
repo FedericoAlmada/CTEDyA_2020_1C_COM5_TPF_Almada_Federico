@@ -33,13 +33,22 @@ namespace juegoIA
                     nuevasCartasH.Remove(cartaH);
 
                     int nuevoLimite = estado.getLimite() - cartaH;
+                    estado.setLimite(nuevoLimite);
 
                     if (estado.getLimite() > 0)
                     {
-                        Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
-                        createArbol(nuevoEstado);
+                        if (estado.getCartasH().Count > 0) // Si no se completó de agregar nodos al arbol de jugador sigo
+                        {
+                            Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, estado.getLimite(), true);
+                            createArbol(nuevoEstado);
+                        }
+                        else // sino cambio el turno
+                        {
+                            Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
+                            createArbol(nuevoEstado);
+                        }
                     }
-                    else
+                    else // asigno la función heuristica al nodo/subarbol actual para dejar de seguir armando el arbol de jugadas
                     {
                         hijo.getDatoRaiz().setFuncHeuristica(1);
                     }
@@ -81,12 +90,13 @@ namespace juegoIA
         private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
         {
             List<ArbolGeneral<Carta>> hijos = raiz.getHijos();
+
             ArbolGeneral<Carta> arbolAux = new ArbolGeneral<Carta>(new Carta(0, 0));
             foreach (var hijo in hijos)
             {
                 if (hijo.getDatoRaiz().getFuncHeursitica() == 1) 
 				{
-                    arbolAux.getDatoRaiz().setCarta(hijo.getDatoRaiz().getCarta());
+                    arbolAux = hijo;
 				}
 			}
             return arbolAux.getDatoRaiz().getCarta();

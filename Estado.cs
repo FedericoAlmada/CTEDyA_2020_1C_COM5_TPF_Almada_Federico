@@ -12,6 +12,16 @@ namespace juegoIA
         private int limite;
         private bool turnoHumano;
 
+        public Estado(){}
+
+        public Estado(List<int> cartasIA, List<int> cartasH, int limite, bool turnoH)
+        {
+            this.naipesComputer = cartasIA;
+            this.naipesHumano = cartasH;
+            this.limite = limite;
+            this.turnoHumano = turnoH;
+        }
+
         public List<int> getCartasH()
         {
             return naipesHumano;

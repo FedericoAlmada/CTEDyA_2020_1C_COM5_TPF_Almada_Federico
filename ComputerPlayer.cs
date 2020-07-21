@@ -7,16 +7,17 @@ namespace juegoIA
 	public class ComputerPlayer: Jugador
 	{
         Estado estado;
+        int carta;
         private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	
 
-		public ComputerPlayer(){}
+        public ComputerPlayer(){}
 	
-		public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
-		{
+        public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
+        {
             bool turnoHumano = true;
             estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
-			createArbol(estado);
-		}
+            createArbol(estado);
+        }
 
         private void createArbol(Estado estado)
         {
@@ -35,16 +36,18 @@ namespace juegoIA
                     int nuevoLimite = estado.getLimite() - cartaH;
                     estado.setLimite(nuevoLimite);
 
-                    if (estado.getLimite() > 0)
+                    estado.setCartasH(nuevasCartasH);
+
+                    if (estado.getLimite() >= 0)
                     {
-                        if (estado.getCartasH().Count > 0) // Si no se completó de agregar nodos al arbol de jugador sigo
+                        if (estado.getCartasH().Count > 0) // Si el humano todavia tiene cartas, se sigue con el arbol.
                         {
-                            Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, estado.getLimite(), true);
+                            Estado nuevoEstado = new Estado(estado.getCartasIA(), estado.getCartasH(), estado.getLimite(), true);
                             createArbol(nuevoEstado);
                         }
-                        else // sino cambio el turno
+                        else // sino, cambio el turno
                         {
-                            Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
+                            Estado nuevoEstado = new Estado(estado.getCartasIA(), estado.getCartasH(), estado.getLimite(), false);
                             createArbol(nuevoEstado);
                         }
                     }
@@ -68,7 +71,7 @@ namespace juegoIA
 
                     int nuevoLimite = estado.getLimite() - cartaIA;
 
-                    if (estado.getLimite() > 0)
+                    if (estado.getLimite() >= 0)
                     {
                         Estado nuevoEstado = new Estado(nuevasCartasIA, estado.getCartasH(), nuevoLimite, true);
                         createArbol(nuevoEstado);
@@ -87,20 +90,17 @@ namespace juegoIA
             return _descartarUnaCarta(miniMax);
         }
 
-        private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
-        {
-            List<ArbolGeneral<Carta>> hijos = raiz.getHijos();
-
-            ArbolGeneral<Carta> arbolAux = new ArbolGeneral<Carta>(new Carta(0, 0));
-            foreach (var hijo in hijos)
+         private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
+         {
+            foreach (var hijo in raiz.getHijos())
             {
                 if (hijo.getDatoRaiz().getFuncHeursitica() == 1) 
-				{
-                    arbolAux = hijo;
-				}
-			}
-            return arbolAux.getDatoRaiz().getCarta();
-		}
+                {
+                    this.carta = hijo.getDatoRaiz().getCarta();
+                }
+            }
+            return carta;
+        }
 
 		public override void cartaDelOponente(int cartaH)
 		{

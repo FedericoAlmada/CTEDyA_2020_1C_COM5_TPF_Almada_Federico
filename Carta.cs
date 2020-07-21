@@ -5,7 +5,7 @@ using System.Text;
 
 namespace juegoIA
 {
-    class Carta<int><int>
+    class Carta
     {
         private int carta;
         private int funcHeuristica;

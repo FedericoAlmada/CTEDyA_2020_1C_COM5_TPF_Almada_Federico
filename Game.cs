@@ -8,13 +8,9 @@ namespace juegoIA
 
 	public class Game
 	{
-        //public static int WIDTH = 12;
-        //public static int UPPER = 35;
-        //public static int LOWER = 25;
-
-        public static int WIDTH = 24;
-        public static int UPPER = 50;
-        public static int LOWER = 35;
+        public static int WIDTH = 12;
+        public static int UPPER = 35;
+        public static int LOWER = 25;
 
 		private Jugador player1 = new ComputerPlayer();
 		private Jugador player2 = new HumanPlayer();

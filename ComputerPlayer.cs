@@ -5,7 +5,7 @@ using System.Linq;
 namespace juegoIA
 {
     public class ComputerPlayer: Jugador
-	{
+    {
         Estado estado;
         private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	// arbol de todas las jugadas
         private ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0)); // puntero del arbol
@@ -17,6 +17,7 @@ namespace juegoIA
             bool turnoHumano = true;
             estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
             createArbol(estado, miniMax);
+            jugadaActual = miniMax;
         }
 
         private void createArbol(Estado estado, ArbolGeneral<Carta> raiz)
@@ -40,6 +41,7 @@ namespace juegoIA
 
                         Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
                         createArbol(nuevoEstado, hijo);
+                        raiz.getDatoRaiz().setFuncHeuristica(-1);
                     }
                     else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
@@ -66,6 +68,7 @@ namespace juegoIA
 
                         Estado nuevoEstado = new Estado(nuevasCartasIA, estado.getCartasH(), nuevoLimite, true);
                         createArbol(nuevoEstado, hijo);
+                        hijo.getDatoRaiz().setFuncHeuristica(1);
                     }
                     else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
@@ -77,28 +80,37 @@ namespace juegoIA
 
         public override int descartarUnaCarta()
         {
+            int contador = 0;
             Console.WriteLine("Cartas disponibles (IA):");
+
+            foreach (var carta in estado.getCartasIA())
+            {
+                contador++;
+                if (contador == estado.getCartasIA().Count)
+                    Console.Write(carta);
+                else
+                    Console.Write(carta + ", ");
+            }
             return _descartarUnaCarta(jugadaActual);
         }
 
          private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
          {
-            int carta = 0;
             foreach (var hijo in raiz.getHijos())
             {
-                if (hijo.getDatoRaiz().getFuncHeursitica() == 1) 
+                if (hijo.getDatoRaiz().getFuncHeursitica() == 1)
                 {
-                    carta = hijo.getDatoRaiz().getCarta();
-                }
+                    jugadaActual = hijo;
+                } 
             }
-            return carta;
-
+            return jugadaActual.getDatoRaiz().getCarta();
         }
 
         public override void cartaDelOponente(int cartaH)
         {
             Console.WriteLine("\nEl humano ha lanzado la carta: " + cartaH.ToString());
-            foreach (ArbolGeneral<Carta> hijo in miniMax.getHijos())
+
+            foreach (ArbolGeneral<Carta> hijo in jugadaActual.getHijos())
             {
                 if (hijo.getDatoRaiz().getCarta() == cartaH)
                 {
@@ -106,6 +118,7 @@ namespace juegoIA
                     break;
                 }
             }
+
         }
     }
 }

@@ -80,7 +80,7 @@ namespace juegoIA
 
         public override int descartarUnaCarta()
         {
-            Console.WriteLine("Cartas disponibles (IA):");
+            Console.WriteLine("Turno IA\nCartas disponibles:");
 
             foreach (var carta in estado.getCartasIA())
             {
@@ -124,7 +124,11 @@ namespace juegoIA
 
         public override void cartaDelOponente(int cartaH)
         {
-            Console.WriteLine("\nEl humano ha lanzado la carta: " + cartaH.ToString());
+            Console.Write("\n**********************************************");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("\nEl humano descartó la carta: " + cartaH.ToString() + "\n");
+            Console.ResetColor();
+            Console.Write("**********************************************\n");
 
             foreach (ArbolGeneral<Carta> hijo in jugadaActual.getHijos())
             {

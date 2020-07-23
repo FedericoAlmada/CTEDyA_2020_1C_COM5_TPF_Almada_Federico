@@ -7,9 +7,16 @@ namespace juegoIA
 	{
 		public static void Main(string[] args)
 		{
-				Game game = new Game();
-				game.play();
-			    Console.ReadKey();
+            string reset = "S";
+            while (reset == "S")
+            {
+                Game game = new Game();
+                game.play();
+                Console.ReadKey(true);
+                Console.WriteLine("\n¿Desea volver a jugar? (S/N)");
+                reset = Console.ReadLine();
+                Console.Clear();
+            }
 		}
 	}
 }

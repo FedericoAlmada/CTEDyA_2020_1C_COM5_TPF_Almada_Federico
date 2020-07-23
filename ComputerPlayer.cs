@@ -80,16 +80,32 @@ namespace juegoIA
 
         public override int descartarUnaCarta()
         {
-            int contador = 0;
             Console.WriteLine("Cartas disponibles (IA):");
 
             foreach (var carta in estado.getCartasIA())
             {
-                contador++;
-                if (contador == estado.getCartasIA().Count)
-                    Console.Write(carta);
+                var funcHeuristicaAux = 0;
+
+                foreach (var nodo in jugadaActual.getHijos())
+                {
+                    if (carta == nodo.getDatoRaiz().getCarta())
+                    {
+                        funcHeuristicaAux = nodo.getDatoRaiz().getFuncHeursitica();
+                    }
+                }
+
+                if (funcHeuristicaAux > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.Write("(" + carta + ", " + "+" + funcHeuristicaAux + ") ");
+                    Console.ResetColor();
+                }
                 else
-                    Console.Write(carta + ", ");
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("(" + carta + ", " + funcHeuristicaAux + ") ");
+                    Console.ResetColor();
+                }
             }
             return _descartarUnaCarta(jugadaActual);
         }

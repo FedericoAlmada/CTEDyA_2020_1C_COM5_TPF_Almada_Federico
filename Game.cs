@@ -39,10 +39,8 @@ namespace juegoIA
 			
 		}
 		
-		
 		private void printScreen()
 		{
-			Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("LIMITE: ");
             Console.ResetColor();
@@ -56,9 +54,7 @@ namespace juegoIA
 			limite -= carta;
 			oponente.cartaDelOponente(carta);
 			juegaHumano = !juegaHumano;
-		}
-		
-		
+		}		
 		
 		private void printWinner()
 		{
@@ -73,7 +69,7 @@ namespace juegoIA
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
 				Console.Write("\nJUEGO TERMINADO: ");
-                Console.Write(" Ha ganado la Inteligencia Artificial!");
+                Console.Write("Ha ganado la Inteligencia Artificial!");
                 Console.ResetColor();
 			}
 			

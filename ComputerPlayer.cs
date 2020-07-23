@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace juegoIA
 {
-	public class ComputerPlayer: Jugador
+    public class ComputerPlayer: Jugador
 	{
         Estado estado;
-        int carta;
-        private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	
+        private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	// arbol de todas las jugadas
+        private ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0)); // puntero del arbol
 
         public ComputerPlayer(){}
 	
@@ -16,67 +16,58 @@ namespace juegoIA
         {
             bool turnoHumano = true;
             estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
-            createArbol(estado);
+            createArbol(estado, miniMax);
         }
 
-        private void createArbol(Estado estado)
+        private void createArbol(Estado estado, ArbolGeneral<Carta> raiz)
         {
-            if (estado.getTurnoH())
+            if (estado.getTurnoH()) // turno del Humano
             {
                 foreach (int cartaH in estado.getCartasH())
                 {
                     Carta carta = new Carta(cartaH, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
-                    miniMax.agregarHijo(hijo);
 
-                    List<int> nuevasCartasH = new List<int>();
-                    nuevasCartasH.AddRange(estado.getCartasH());
-                    nuevasCartasH.Remove(cartaH);
+                    raiz.agregarHijo(hijo);
 
                     int nuevoLimite = estado.getLimite() - cartaH;
-                    estado.setLimite(nuevoLimite);
 
-                    estado.setCartasH(nuevasCartasH);
-
-                    if (estado.getLimite() >= 0)
+                    if (nuevoLimite >= 0) // si no es el caso base, actualizo el estado y sigo armando el arbol.
                     {
-                        if (estado.getCartasH().Count > 0) // Si el humano todavia tiene cartas, se sigue con el arbol.
-                        {
-                            Estado nuevoEstado = new Estado(estado.getCartasIA(), estado.getCartasH(), estado.getLimite(), true);
-                            createArbol(nuevoEstado);
-                        }
-                        else // sino, cambio el turno
-                        {
-                            Estado nuevoEstado = new Estado(estado.getCartasIA(), estado.getCartasH(), estado.getLimite(), false);
-                            createArbol(nuevoEstado);
-                        }
+                        List<int> nuevasCartasH = new List<int>();
+                        nuevasCartasH.AddRange(estado.getCartasH());
+                        nuevasCartasH.Remove(cartaH);
+
+                        Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
+                        createArbol(nuevoEstado, hijo);
                     }
-                    else // asigno la función heuristica al nodo/subarbol actual para dejar de seguir armando el arbol de jugadas
+                    else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
-                        hijo.getDatoRaiz().setFuncHeuristica(1);
+                        raiz.getDatoRaiz().setFuncHeuristica(1);
                     }
                 }
             }
-            else
+            else// turno de la IA
             {
                 foreach (int cartaIA in estado.getCartasIA())
                 {
                     Carta carta = new Carta(cartaIA, 0);
                     ArbolGeneral<Carta> hijo = new ArbolGeneral<Carta>(carta);
-                    miniMax.agregarHijo(hijo);
 
-                    List<int> nuevasCartasIA = new List<int>();
-                    nuevasCartasIA.AddRange(estado.getCartasIA());
-                    nuevasCartasIA.Remove(cartaIA);
+                    raiz.agregarHijo(hijo);
 
                     int nuevoLimite = estado.getLimite() - cartaIA;
 
-                    if (estado.getLimite() >= 0)
+                    if (nuevoLimite >= 0) // si no es el caso base, actualizo el estado y sigo armando el arbol.
                     {
+                        List<int> nuevasCartasIA = new List<int>();
+                        nuevasCartasIA.AddRange(estado.getCartasIA());
+                        nuevasCartasIA.Remove(cartaIA);
+
                         Estado nuevoEstado = new Estado(nuevasCartasIA, estado.getCartasH(), nuevoLimite, true);
-                        createArbol(nuevoEstado);
+                        createArbol(nuevoEstado, hijo);
                     }
-                    else
+                    else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
                         hijo.getDatoRaiz().setFuncHeuristica(-1);
                     }
@@ -87,32 +78,34 @@ namespace juegoIA
         public override int descartarUnaCarta()
         {
             Console.WriteLine("Cartas disponibles (IA):");
-            return _descartarUnaCarta(miniMax);
+            return _descartarUnaCarta(jugadaActual);
         }
 
          private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
          {
+            int carta = 0;
             foreach (var hijo in raiz.getHijos())
             {
                 if (hijo.getDatoRaiz().getFuncHeursitica() == 1) 
                 {
-                    this.carta = hijo.getDatoRaiz().getCarta();
+                    carta = hijo.getDatoRaiz().getCarta();
                 }
             }
             return carta;
+
         }
 
-		public override void cartaDelOponente(int cartaH)
-		{
+        public override void cartaDelOponente(int cartaH)
+        {
             Console.WriteLine("\nEl humano ha lanzado la carta: " + cartaH.ToString());
             foreach (ArbolGeneral<Carta> hijo in miniMax.getHijos())
             {
                 if (hijo.getDatoRaiz().getCarta() == cartaH)
                 {
-                    miniMax = hijo;
+                    jugadaActual = hijo; // jugada actual apunta a la carta que tiro el humano
                     break;
                 }
             }
-		}
-	}
+        }
+    }
 }

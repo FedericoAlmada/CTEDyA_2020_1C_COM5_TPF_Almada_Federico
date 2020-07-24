@@ -41,11 +41,25 @@ namespace juegoIA
 
                         Estado nuevoEstado = new Estado(estado.getCartasIA(), nuevasCartasH, nuevoLimite, false);
                         createArbol(nuevoEstado, hijo);
-                        raiz.getDatoRaiz().setFuncHeuristica(-1);
+
+                        // Función heuristica MiniMax
+                        bool max = false;
+
+                        foreach (var nodo in hijo.getHijos())
+                        {
+                            if(nodo.getDatoRaiz().getFuncHeursitica() == 1) // Si existe al menos un hijo con FH +1, se maximiza
+                                max = true; 
+                        }
+
+                        if(max)
+                            hijo.getDatoRaiz().setFuncHeuristica(1);
+
+                        else
+                            hijo.getDatoRaiz().setFuncHeuristica(-1);
                     }
                     else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
-                        raiz.getDatoRaiz().setFuncHeuristica(1);
+                        hijo.getDatoRaiz().setFuncHeuristica(1); // Pierde el humano, gana la IA.
                     }
                 }
             }
@@ -68,11 +82,25 @@ namespace juegoIA
 
                         Estado nuevoEstado = new Estado(nuevasCartasIA, estado.getCartasH(), nuevoLimite, true);
                         createArbol(nuevoEstado, hijo);
-                        hijo.getDatoRaiz().setFuncHeuristica(1);
+
+                        // Función heuristica MiniMax
+                        bool min = false;
+
+                        foreach (var nodo in hijo.getHijos())
+                        {
+                            if (nodo.getDatoRaiz().getFuncHeursitica() == -1) // Si existe al menos un hijo con FH -1, se minimiza
+                                min = true;
+                        }
+
+                        if (min)
+                            hijo.getDatoRaiz().setFuncHeuristica(-1);
+
+                        else
+                            hijo.getDatoRaiz().setFuncHeuristica(1);
                     }
                     else // si es el caso base, entonces asigno la funcion heuristica al nodo hijo.
                     {
-                        hijo.getDatoRaiz().setFuncHeuristica(-1);
+                        hijo.getDatoRaiz().setFuncHeuristica(-1); // Pierde la IA, gana el Humano.
                     }
                 }
             }
@@ -89,12 +117,10 @@ namespace juegoIA
                 foreach (var nodo in jugadaActual.getHijos())
                 {
                     if (carta == nodo.getDatoRaiz().getCarta())
-                    {
                         funcHeuristicaAux = nodo.getDatoRaiz().getFuncHeursitica();
-                    }
                 }
 
-                if (funcHeuristicaAux > 0)
+                if (funcHeuristicaAux == 1)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write("(" + carta + ", " + "+" + funcHeuristicaAux + ") ");
@@ -110,25 +136,52 @@ namespace juegoIA
             return _descartarUnaCarta(jugadaActual);
         }
 
-         private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
-         {
+        private int _descartarUnaCarta(ArbolGeneral<Carta> raiz)
+        {
+            // la IA tiene que lanzar una carta con FH +1 (lista de opciones), si no tiene, entonces lanzará una al azar.
+            Random random = new Random();
+            List<ArbolGeneral<Carta>> opciones = new List<ArbolGeneral<Carta>>(); // Lista que almacena todas las posibilidades de victoria.
+            int i = 0;
+
+            // Se crea la lista de opciones de cartas donde la IA gana.
             foreach (var hijo in raiz.getHijos())
             {
-                if (hijo.getDatoRaiz().getFuncHeursitica() == 1)
-                {
-                    jugadaActual = hijo;
-                } 
+                if (hijo.getDatoRaiz().getFuncHeursitica() == 1) // Si tiene un hijo con FH +1, entonces se lo agrega a la lista de opciones.
+                    opciones.Add(hijo);
             }
-            return jugadaActual.getDatoRaiz().getCarta();
+            
+            if (opciones.Count == 0) // Si la IA no tiene opciones de ganar, entonces va a tirar cualquier carta.
+            {
+                foreach (var hijo in raiz.getHijos())
+                {
+                    if (hijo.getDatoRaiz().getFuncHeursitica() == -1) // La IA va a lanzar la última carta.
+                        jugadaActual = hijo;
+                }
+            }
+            else // Si la IA tiene opciones de ganar.
+            {
+                int opcion = random.Next(1, opciones.Count); // Se crea un valor random entre 1 y la cantidad de opciones que haya.
+                foreach (var o in opciones) // Se recorren todas las opciones.
+                {
+                    i++; // Se incrementa el contador a medida que se recorren las opciones.
+
+                    if (i == opcion) // Si el contador es igual a el número de opción aleatoria.
+                    {
+                        jugadaActual = o; // Entonces, jugadaActual apunta a esa opción.
+                        break;
+                    }
+                }
+            }
+            return jugadaActual.getDatoRaiz().getCarta(); // Se retorna la carta elegida.
         }
 
         public override void cartaDelOponente(int cartaH)
         {
-            Console.Write("\n**********************************************");
+            Console.Write("\n-----------------------------------------------------------");
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("\nEl humano descartó la carta: " + cartaH.ToString() + "\n");
+            Console.Write("\nEl humano ha descartado la carta: " + cartaH.ToString() + "\n");
             Console.ResetColor();
-            Console.Write("**********************************************\n");
+            Console.Write("-----------------------------------------------------------\n");
 
             foreach (ArbolGeneral<Carta> hijo in jugadaActual.getHijos())
             {

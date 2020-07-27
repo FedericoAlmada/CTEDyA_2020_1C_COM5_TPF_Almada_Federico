@@ -1,0 +1,73 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Federico Almada}
+\begin{document}
+\begin{titlepage}
+	\includegraphics[width=6cm]{unaj.jpg}
+    \centering
+    \vfill
+    \Huge \textbf{Trabajo Práctico Final}
+    \vskip2cm
+    \Large Complejidad Temporal, Estructura de datos y Algoritmos\\
+    Primer cuatrimestre de 2020\\
+    Comisión 05 - Prof. Leonardo Amet     
+    \vfill
+    \begin{tabular}{ | l | l | l}
+      \hline
+      Alumno: & Almada, Federico \\ \hline
+      Número de legajo: & 27787 \\ \hline
+      Email: & federico.almada1998@gmail.com \\ \hline
+      DNI: & 41.136.004 \\ \hline
+  	\end{tabular}
+    \vfill
+    \vfill
+\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introducción}
+El presente informe es para el Trabajo Práctico Final de la materia Complejidad Temporal, Estructura de datos y Algoritmos que consiste en desarrollar un juego de cartas entre dos contrincantes (el usuario y la computadora). El objetivo principal del mismo es programar la Inteligencia Artificial (IA) con la cual la computadora va a elegir sus cartas, esto se hará mediante un árbol MiniMax.
+
+\subsection{Objetivos generales}
+\begin{itemize}
+	\item Implementar el armado del árbol de decisiones.
+	\item Desarrollar la estrategia con la que la IA tomará decisiones favorables.
+	\item Desarrollar la metodología con la que la IA irá descartando sus cartas.
+	\item Presentar el desarrollo del trabajo así como también los problemas hallados y sus soluciones.
+\end{itemize}
+
+\section{Descripción del juego}
+Básicamente es un 1 vs 1 entre dos jugadores, primero juega el usuario y luego es el turno de la computadora. El juego consta de  un mazo de 12 cartas enumereadas del 1 al 12, a cada participante le corresponde 6 cartas aleatorias del mazo. También, el juego establece un límite al azar entre un rango especificado. A medida que los jugadores van descartando sus cartas, se forma un montículo en donde se sumaran todas las cartas descartadas, el jugador que pierde será el que tire la carta que haga que el montículo supere el límite asignado.  
+
+\section{Algoritmo MiniMax}
+En resumidas palabras, consiste en la elección del mejor movimiento para la computadora, suponiendo que el usuario elegirá uno que le pueda perjudicar. Para elegir la mejor opción este algoritmo realiza un árbol de búsqueda con todos los posibles movimientos, luego recorre todo el árbol de soluciones del juego a partir de un estado dado, es decir, a partir de una jugada realizada. Por lo tanto, este algoritmo será ejecutado cada vez que juegue la computadora.\\
+
+En el caso actual, este algorimo le será muy útil a la computadora para ir descartando cartas cuando sea su turno, ya que de antemano sabrá cuales son sus mejores jugadas y por cual camino tendrá más posibilidades de ganar.\\
+
+Para saber que jugada le conviene o no a la computadora, existe una estrategia o funcion heuristica que indica cual jugada es más conveniente hacer, si la funcion heuristica tiene un valor alto, entonces le conviene a la computadora, en caso contrario, le conviene al oponente.
+
+\section{Diagrama de clases UML}
+En el diagrama de clase se muestra como la clase ComputerPlayer es la que tiene más relaciones con las demás clases en todo el programa. En la clase Estado se almacena cada estado o jugada que será necesaria para ir armando el árbol de decisiones.
+Por otro lado, la clase Consulta es la que tiene todos los métodos necesarios con los cuales el usuario en cada momento del juego podrá solicitar una funcionalidad para ver el desarrollo del arbol en cualquier jugada del árbol de soluciones.
+
+\section{Problemas encontrados}
+Durante el desarrollo del juego surgieron distintos problemas, por un lado, el mayor de los problemas fue la hora de la creación del árbol de posibilidades, en el método Inicializar de la clase ComputerPlayer. Por otro lado, en el mismo método, también ocurrieron algunos problemas en relación a la asignación de la función heuristica. 
+
+\subsection{Soluciones de problemas}
+Para solucionar el armado del arbol, lo que se hizo fue crear un algoritmo recursivo que permita armar el arbollo más eficiente posible, de tal forma que se pare con el armado del árbol cuando se llega a un caso base.
+Por otro lado, en relación a la asignación de la función heuristica. Especialmente en la parte donde se asigna a un nodo una valor huristica de acuerdo a los valores de sus hijos.
+
+\section{Conclusiones}
+En conclusión, los distintos problemas que fueron surgiendo en la implementación se pudieron solucionar, luego fue mas sencillo seguir con el desarrollo del juego.
+\section{Bibliografía}
+[1] Devcode.la - "\emph{El algoritmo Minimax y su aplicación en un juego}"\\
+https://devcode.la/tutoriales/algoritmo-minimax
+\end{document}

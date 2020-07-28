@@ -8,7 +8,7 @@ namespace juegoIA
     {
         Consulta consulta = new Consulta();
         Estado estado;
-        HumanPlayer humano;
+
         private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	// arbol de todas las jugadas
         private ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0)); // puntero del arbol
 

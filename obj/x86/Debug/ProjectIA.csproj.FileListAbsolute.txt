@@ -1,0 +1,5 @@
+C:\Cosas\Github\CTEDyA_2020_1C_COM5_TPF_Almada_Federico\bin\Debug\ConsoleApplication.exe
+C:\Cosas\Github\CTEDyA_2020_1C_COM5_TPF_Almada_Federico\bin\Debug\ConsoleApplication.pdb
+C:\Cosas\Github\CTEDyA_2020_1C_COM5_TPF_Almada_Federico\obj\x86\Debug\ConsoleApplication.exe
+C:\Cosas\Github\CTEDyA_2020_1C_COM5_TPF_Almada_Federico\obj\x86\Debug\ConsoleApplication.pdb
+C:\Cosas\Github\CTEDyA_2020_1C_COM5_TPF_Almada_Federico\obj\x86\Debug\ProjectIA.csprojResolveAssemblyReference.cache

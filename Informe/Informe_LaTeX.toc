@@ -1,0 +1,16 @@
+\babel@toc {spanish}{}
+\contentsline {section}{\numberline {1}Introducción}{2}%
+\contentsline {subsection}{\numberline {1.1}Objetivos generales}{2}%
+\contentsline {section}{\numberline {2}Descripción del juego}{3}%
+\contentsline {section}{\numberline {3}Algoritmo MiniMax}{3}%
+\contentsline {section}{\numberline {4}Diagrama de clases UML}{3}%
+\contentsline {section}{\numberline {5}Problemas encontrados}{5}%
+\contentsline {subsection}{\numberline {5.1}Soluciones de problemas}{5}%
+\contentsline {section}{\numberline {6}Interfaz del juego}{5}%
+\contentsline {section}{\numberline {7}Consultas}{6}%
+\contentsline {subsection}{\numberline {7.1}Consulta A}{6}%
+\contentsline {subsection}{\numberline {7.2}Consulta B}{6}%
+\contentsline {subsection}{\numberline {7.3}Consulta C}{6}%
+\contentsline {section}{\numberline {8}Mejoras}{7}%
+\contentsline {section}{\numberline {9}Conclusiones}{7}%
+\contentsline {section}{\numberline {10}Bibliografía}{8}%

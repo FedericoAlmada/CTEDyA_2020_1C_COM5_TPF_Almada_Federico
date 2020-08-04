@@ -7,9 +7,6 @@ namespace juegoIA
 {
 	public class Game
 	{
-        //public static int WIDTH = 6;
-        //public static int UPPER = 16;
-        //public static int LOWER = 12;
         public static int WIDTH = 12;
         public static int UPPER = 35;
         public static int LOWER = 25;

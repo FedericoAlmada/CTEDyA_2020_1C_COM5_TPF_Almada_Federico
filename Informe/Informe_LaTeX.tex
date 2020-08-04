@@ -59,7 +59,7 @@ Para saber que jugada le conviene o no a la computadora, existe una estrategia o
 \includegraphics[scale=0.32]{diagrama_UML.png} 
 \end{center}
 
-En el diagrama de clase se muestra como la clase ComputerPlayer es la que tiene más relaciones con las demás clases en todo el programa. En la clase Estado se almacena cada estado o jugada que será necesaria para ir armando el árbol de decisiones.
+En la clase Estado se almacena cada estado o jugada que será necesaria para ir armando el árbol de decisiones, por lo que depende del estado de la jugada de la clase ComputerPlayer.
 Por otro lado, la clase Consulta es la que tiene todos los métodos necesarios con los cuales el usuario en cada momento del juego podrá solicitar una funcionalidad para ver el desarrollo del arbol en cualquier jugada del árbol de soluciones.
 \newpage
 \section{Problemas encontrados}
@@ -74,14 +74,42 @@ Por otro lado, en relación a la asignación de la función heuristica, a medida
 \begin{center}
 \includegraphics[scale=0.7]{captura1.PNG} 
 \end{center}
-Como se pude observar, primero se asigna un límite al azar, entre un rango determinado por el juego. El humano va a tener en cada jugada la posibilidad de hacer una consulta. Cuando el humano descarta su carta, se invierte el turno y la IA utiliza la función heuristica para decidir cual será su mejor opción. Como se puede ver en la siguiente captura, el color verde indica que es una buena jugada para la computadora, por el contrario, el color rojo indicia que es una buena jugada para el usuario.
+Como se pude observar, primero se asigna un límite al azar, entre un rango determinado por el juego. El humano va a tener en cada jugada la posibilidad de hacer una consulta. Cuando el humano descarta su carta, se invierte el turno y la IA utiliza la función heuristica para decidir cual será su mejor opción. Como se puede ver en la siguiente captura, el color verde indica que es una buena jugada para la computadora, por el contrario, el color rojo indicia que es una buena jugada para el usuario. El usuario tiene la posibilidad de reiniciar el juego cuando lo desee.
 
 \begin{center}
 \includegraphics[scale=0.7]{captura2.PNG} 
 \end{center}
+
+\section{Consultas}
+El jugador cada vez que juega tiene disponible 3 consultas.
+\begin{itemize}
+\item Imprimir posibles resultados a partir de un punto, es decir, los caminos que se forman a partir de un nodo raiz hasta una hoja.
+\item Escribir una secuencia de cartas y simular las jugadas para ver que pasaría a partir de ese punto.
+\item Mostrar todas las cartas a partir de un cierto nivel de profundidad.
+\end{itemize}
+
+También, el usuario dispone de 3 utilizades:
+\begin{itemize}
+\item Salir del juego.
+\item Seguir jugando.
+\item Reiniciar una partida.
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.7]{captura3.PNG} 
+\end{center}
+\subsection{Consulta A}
+Si el usuario presiona la tecla A, se muestra consulta que imprime todos los caminos posibles a partir de un cierto punto. 
+\subsection{Consulta B}
+Si el usuario presiona la tecla C, podrá simular una secuencia de cartas y avanzar para comprobar que pasará en cierto punto.
+Vale aclarar que al ser una partida simulada, no afectará a la jugada original.
+\subsection{Consulta C}
+Si el usuario presiona la tecla C, se hace un recorrido por niveles y se imprime en pantalla un nivel completo con las cartas, si aparece en color celeste, es del humano, sino de la IA.
+\begin{center}
+\includegraphics[scale=0.8]{captura4.PNG} 
+\end{center}
 \newpage
-\section{Posibles mejoras}
-Una mejora posible podría ser que el turno de los jugadores se invierta cuando el usuario lo desee, o sino, que sea elegido aleatoriamente por el juego. También sería ideal implementar un sistema de dificultades para que la IA le de más oportunidades de ganar al usuario. Por ejemplo, que exista una dificultad 'Normal' en donde la computadora tenga solo un 60 porciento de posibilidades de ganar.
+\section{Mejoras}
+Para mejorar la experiencia para el usuario, se le ha asignado un Timer desde un rango entre 1,5 seg y 5 seg al descarte de carta de la Inteligencia Articial para aparentar que está pensando en que carta lanzar.Una mejora posible para el juego podría ser que el turno de los jugadores se invierta cuando el usuario lo desee, o sino, que sea elegido aleatoriamente por el juego. También sería ideal implementar un sistema de dificultades para que la IA le de más oportunidades de ganar al usuario. Por ejemplo, que exista una dificultad 'Normal' en donde la computadora tenga solo un 60 porciento de posibilidades de ganar.
 
 \section{Conclusiones}
 En conclusión, los distintos problemas que fueron surgiendo en la implementación se pudieron solucionar, luego fue mas sencillo seguir con el desarrollo del juego.\\

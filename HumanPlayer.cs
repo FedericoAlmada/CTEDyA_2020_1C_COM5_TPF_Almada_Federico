@@ -1,17 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-
 namespace juegoIA
 {
-
 	public class HumanPlayer: Jugador
 	{
-        Consulta consulta = new Consulta();
-
 		private List<int> naipes = new List<int>();
 		private List<int> naipesComputer = new List<int>();
 		private int limite;
@@ -19,12 +14,17 @@ namespace juegoIA
 		
 		public HumanPlayer(){}
 
+        public HumanPlayer(Consulta consulta)
+        {
+            this.consulta = consulta;
+        }
+
 		public HumanPlayer(bool random_card)
 		{
 			this.random_card = random_card;
 		}
-		
-		public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
+        
+		public override void incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
 		{
 			this.naipes = cartasPropias;
 			this.naipesComputer = cartasOponente;
@@ -34,60 +34,101 @@ namespace juegoIA
 		public override int descartarUnaCarta()
 		{
 			int carta = 0;
-            int opcion;
-
-            do
-            {
-                Console.WriteLine("> ¿Qué desea hacer?");
-                Console.WriteLine("1. Mostrar resultados a partir de esta jugada.");
-                Console.WriteLine("2. Mostrar posibles jugadas a partir de una carta.");
-                Console.WriteLine("3. Reiniciar juego.");
-                Console.WriteLine("4. Seguir jugando.");
-                Console.Write("Seleccione una opción: ");
-
-                opcion = int.Parse(Console.ReadLine());
-                switch (opcion)
-                {
-                    case 1:
-                    {
-                        //consulta.consultaA();
-                        break;
-                    }
-
-                    case 3:
-                    {
-                        consulta.consultaC();
-                        Console.ReadKey();
-                        break;
-                    }
-                }   
-            }
-            while (opcion != 4);
-
-            Console.WriteLine();
+            string opcion;
             Console.WriteLine("Turno Humano\nCartes disponibles: ");
 
 			for (int i = 0; i < naipes.Count; i++) 
             {
 				Console.Write("(" + naipes[i].ToString() + ")");
-				if (i<naipes.Count-1) {
+				if (i<naipes.Count-1) 
+                {
 					Console.Write(" ");
 				}
 			}
 			Console.WriteLine();
 			if (!random_card) 
             {
-                Console.WriteLine("\nEl humano está evaluando su mejor opción...");
-				Console.Write("\nIngrese una carta: ");
-				string entrada = Console.ReadLine();
+                Console.WriteLine("El humano está evaluando su mejor opción...");
+				Console.Write("\nIngrese una carta ó presione ENTER para abrir las consultas: ");
+                string entrada = Console.ReadLine();
 				Int32.TryParse(entrada, out carta);
 				while (!naipes.Contains(carta)) 
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("ERROR: Opción Inválida. Por favor, ingrese otro naipe: ");
-                    Console.ResetColor();
-					entrada = Console.ReadLine();
-					Int32.TryParse(entrada, out carta);
+                    if (entrada == "") // Si se entra al módulo de consultas
+                    {
+                        Console.WriteLine("\n--------------------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.WriteLine("                             CONSULTAS                   ");
+                        Console.ResetColor();
+                        Console.WriteLine("--------------------------------------------------------------------");
+                        Console.WriteLine("Usted ha ingresado al módulo de consultas. ¿Qué desea hacer?\n\nA. Mostrar resultados a partir de este punto.\nB. Simular una secuencia de posibles jugadas.\nC. Imprimir cartas a partir de una profundidad.");
+                        Console.WriteLine("S. Seguir con el juego.\nR. Reiniciar el juego\nQ. Cerrar el juego.");
+                        Console.WriteLine("--------------------------------------------------------------------\n");
+                        Console.Write("Ingrese una opción: ");
+                        opcion = Console.ReadLine();
+
+                        switch (opcion.ToUpper())
+                        {
+                            case "A":
+                                consulta.consultaA();
+                                Console.WriteLine("\n\nPresione una tecla para continuar.");
+                                Console.ReadKey();
+                                Console.Clear();
+                                break;
+                            case "B":
+                                consulta.consultaB();
+                                Console.WriteLine("\n\nPresione una tecla para continuar.");
+                                Console.ReadKey();
+                                Console.Clear();
+                                break;
+                            case "C":
+                                consulta.consultaC();
+                                Console.WriteLine("\n\nPresione una tecla para continuar.");
+                                Console.ReadKey();
+                                Console.Clear();
+                                break;
+                            case "R":
+                                consulta.reiniciarJuego();
+                                Console.Clear();
+                                break;
+                            case "Q":
+                                Environment.Exit(0);
+                                break;
+                            case "S":
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("\nJuego retomado.");
+                                Console.ResetColor();
+                                Console.WriteLine("--------------------------------------------------------------------");
+                                Console.WriteLine("Turno Humano\nCartes disponibles: ");
+
+                                for (int i = 0; i < naipes.Count; i++)
+                                {
+                                    Console.Write("(" + naipes[i].ToString() + ")");
+                                    if (i < naipes.Count - 1)
+                                    {
+                                        Console.Write(" ");
+                                    }
+                                }
+                                Console.Write("\nIngrese una carta ó presione ENTER para abrir las consultas: ");
+                                entrada = Console.ReadLine();
+                                Int32.TryParse(entrada, out carta);
+                                break;
+                            default:
+                                Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("ERROR: Opción Inválida. Por favor, vuelva a ingresar una opción.");
+                                Console.ResetColor();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("ERROR: Opción Inválida. Por favor, ingrese otro naipe: ");
+                        Console.ResetColor();
+                        entrada = Console.ReadLine();
+                        Int32.TryParse(entrada, out carta);
+                    }
 				}
 			}
             else 
@@ -97,20 +138,17 @@ namespace juegoIA
 				carta = naipes[index];
 				Console.Write("Ingrese naipe: " + carta.ToString());
 			}
-			
 			return carta;
 		}
 		
 		public override void cartaDelOponente(int carta)
         {
+            Random random = new Random();
             Console.WriteLine("\n\nLa Inteligencia Artificial está evaluando su mejor jugada..");
-            Thread.Sleep(6000);
-
-            Console.Write("\n-----------------------------------------------------------");
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Thread.Sleep(random.Next(1500,5000));
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("\nLa Inteligencia Artificial ha descartado la carta:" + carta.ToString() + "\n");
             Console.ResetColor();
-            Console.Write("-----------------------------------------------------------\n");
 		}
-	}
+    }
 }

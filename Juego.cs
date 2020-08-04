@@ -8,7 +8,7 @@ namespace juegoIA
 		public static void Main(string[] args)
 		{
             string reset = "S";
-            while (reset == "S")
+            while (reset.ToUpper() == "S")
             {
                 Game game = new Game();
                 game.play();

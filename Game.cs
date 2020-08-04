@@ -5,21 +5,25 @@ using System.Linq;
 
 namespace juegoIA
 {
-
 	public class Game
 	{
+        //public static int WIDTH = 6;
+        //public static int UPPER = 16;
+        //public static int LOWER = 12;
         public static int WIDTH = 12;
         public static int UPPER = 35;
         public static int LOWER = 25;
 
-		private Jugador player1 = new ComputerPlayer();
-		private Jugador player2 = new HumanPlayer();
+        public static Consulta consulta = new Consulta();
+
+        private Jugador player1 = new ComputerPlayer(consulta);
+        private Jugador player2 = new HumanPlayer(consulta);
 		private List<int> naipesHuman = new List<int>();
 		private List<int> naipesComputer = new List<int>();
 		private int limite;
 		private bool juegaHumano = false;
-		
-		
+
+
 		public Game()
 		{
 			var rnd = new Random();
@@ -36,11 +40,11 @@ namespace juegoIA
 			}
 			player1.incializar(naipesComputer, naipesHuman, limite);
 			player2.incializar(naipesHuman, naipesComputer, limite);
-			
 		}
 		
 		private void printScreen()
 		{
+            Console.WriteLine("--------------------------------------------------------------------\n");
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("LIMITE: ");
             Console.ResetColor();
@@ -62,7 +66,7 @@ namespace juegoIA
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("\nJUEGO TERMINADO: ");
-				Console.WriteLine("\nHas ganado! Felicitaciones");
+				Console.WriteLine("\nHa ganado el Humano!");
                 Console.ResetColor();
 			} 
             else 
@@ -72,7 +76,6 @@ namespace juegoIA
                 Console.Write("Ha ganado la Inteligencia Artificial!");
                 Console.ResetColor();
 			}
-			
 		}
 		
 		private bool fin()
@@ -94,7 +97,5 @@ namespace juegoIA
 			}
 			this.printWinner();
 		}
-		
-		
 	}
 }

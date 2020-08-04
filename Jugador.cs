@@ -7,8 +7,10 @@ namespace juegoIA
 {
 	public abstract class Jugador
 	{
-		public  abstract void incializar(List<int> cartasPropias, List<int> cartasOponente, int limite);
-		public  abstract int descartarUnaCarta();
+        protected Consulta consulta = new Consulta();
+
+		public abstract void incializar(List<int> cartasPropias, List<int> cartasOponente, int limite);
+		public abstract int descartarUnaCarta();
 		public abstract void cartaDelOponente(int carta);
 	}
 }

@@ -6,20 +6,24 @@ namespace juegoIA
 {
     public class ComputerPlayer: Jugador
     {
-        Consulta consulta = new Consulta();
         Estado estado;
-
         private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	// arbol de todas las jugadas
         private ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0)); // puntero del arbol
 
         public ComputerPlayer(){}
-	
+
+        public ComputerPlayer(Consulta consulta)
+        {
+            this.consulta = consulta;
+        }
+
         public override void  incializar(List<int> cartasPropias, List<int> cartasOponente, int limite)
         {
             bool turnoHumano = true;
             estado = new Estado(cartasPropias, cartasOponente, limite, turnoHumano);
             createArbol(estado, miniMax);
             jugadaActual = miniMax;
+            consulta.setJugadaActual(jugadaActual);
         }
 
         private void createArbol(Estado estado, ArbolGeneral<Carta> raiz)
@@ -49,8 +53,11 @@ namespace juegoIA
 
                         foreach (var nodo in hijo.getHijos())
                         {
-                            if(nodo.getDatoRaiz().getFuncHeursitica() == 1) // Si existe al menos un hijo con FH +1, se maximiza
-                                max = true; 
+                            if (nodo.getDatoRaiz().getFuncHeursitica() == 1) // Si existe al menos un hijo con FH +1, se maximiza
+                            {
+                                max = true;
+                                break; // agrego un break para cortar la busqueda.
+                            }
                         }
 
                         if(max)
@@ -91,7 +98,10 @@ namespace juegoIA
                         foreach (var nodo in hijo.getHijos()) // Se recorren los hijos del hijo raiz
                         {
                             if (nodo.getDatoRaiz().getFuncHeursitica() == -1) // Si existe al menos un hijo con FH -1, se minimiza
+                            {
                                 min = true;
+                                break; // Agrego un break para cortar la busqueda.
+                            }
                         }
 
                         if (min)
@@ -182,11 +192,9 @@ namespace juegoIA
 
         public override void cartaDelOponente(int cartaH)
         {
-            Console.Write("\n-----------------------------------------------------------");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("\nEl humano ha descartado la carta: " + cartaH.ToString() + "\n");
             Console.ResetColor();
-            Console.Write("-----------------------------------------------------------\n");
 
             foreach (ArbolGeneral<Carta> hijo in jugadaActual.getHijos())
             {
@@ -196,8 +204,12 @@ namespace juegoIA
                     break;
                 }
             }
-            //Consulta consulta = new Consulta(jugadaActual);
-            //consulta.consultaA(jugadaActual);
+            consulta.setJugadaActual(jugadaActual);
+        }
+
+        public void setConsulta(Consulta consulta)
+        {
+            this.consulta = consulta;
         }
     }
 }

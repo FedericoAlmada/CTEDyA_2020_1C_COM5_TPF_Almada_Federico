@@ -7,7 +7,7 @@ namespace juegoIA
 {
      class Consulta
     {
-        List<ArbolGeneral<Carta>> camino;
+        List<ArbolGeneral<Carta>> camino = new List<ArbolGeneral<Carta>>();
         public ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0));
         public ArbolGeneral<Carta> arbolRaiz = new ArbolGeneral<Carta>(new Carta(0, 0));
 
@@ -84,7 +84,7 @@ namespace juegoIA
         {
             ArbolGeneral<Carta> jugada = _consultaB(jugadaActual);
             List<ArbolGeneral<Carta>> camino = _consultaA(jugada);
-            imprimir(camino);
+            //imprimir(camino);
         }
 
         private ArbolGeneral<Carta> _consultaB(ArbolGeneral<Carta> jugadaActual)
@@ -93,8 +93,7 @@ namespace juegoIA
             string numeros = Console.ReadLine();
 
             string[] cartas = numeros.Split(','); // se Splitea las cartas que haya escrito el usuario en la secuencia
-            ArbolGeneral<Carta> aux = new ArbolGeneral<Carta>(new Carta(0, 0));
-            aux = jugadaActual; // aux apunta a la jugada actual
+            ArbolGeneral<Carta> aux = jugadaActual; // aux apunta a la jugada actual
 
             foreach (string carta in cartas) // se recorre carta de la secuencia
             {

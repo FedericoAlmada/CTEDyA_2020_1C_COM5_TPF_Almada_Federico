@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace juegoIA
 {
-	public class ArbolGeneral<T>
+	class ArbolGeneral<T>
 	{	
 		private NodoGeneral<T> raiz;
 		

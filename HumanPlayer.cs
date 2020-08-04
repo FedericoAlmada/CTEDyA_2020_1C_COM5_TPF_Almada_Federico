@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace juegoIA
 {
-	public class HumanPlayer: Jugador
+	 class HumanPlayer: Jugador
 	{
 		private List<int> naipes = new List<int>();
 		private List<int> naipesComputer = new List<int>();

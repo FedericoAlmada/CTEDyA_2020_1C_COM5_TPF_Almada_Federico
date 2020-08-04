@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace juegoIA
 {
-	public class Game
+	 class Game
 	{
         //public static int WIDTH = 6;
         //public static int UPPER = 16;

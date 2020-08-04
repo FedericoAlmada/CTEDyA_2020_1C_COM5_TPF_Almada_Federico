@@ -5,7 +5,7 @@ using System.Text;
 
 namespace juegoIA
 {
-    public class Consulta
+     class Consulta
     {
         List<ArbolGeneral<Carta>> camino;
         public ArbolGeneral<Carta> jugadaActual = new ArbolGeneral<Carta>(new Carta(0, 0));
@@ -22,7 +22,7 @@ namespace juegoIA
         {
             camino = new List<ArbolGeneral<Carta>>();
             List<ArbolGeneral<Carta>> x = _consultaA(jugadaActual);
-            imprimir(x);
+            //imprimir(x);
         }
 
         private List<ArbolGeneral<Carta>> _consultaA(ArbolGeneral<Carta> jugadaActual)
@@ -31,13 +31,16 @@ namespace juegoIA
 
             if (jugadaActual.esHoja()) // Si se encuentra un nodo hoja, se lo agrega y se agrega un separador.
             {
-                camino.Add(new ArbolGeneral<Carta>(new Carta(0, 0)));
+                // camino.Add(new ArbolGeneral<Carta>(new Carta(0, 0)));
+                imprimir(camino);
+                Console.WriteLine();
             }
             else
             {
                 foreach (ArbolGeneral<Carta> hijo in jugadaActual.getHijos())
                 {
                     _consultaA(hijo);
+                    camino.Remove(hijo);
                 }
             }
 

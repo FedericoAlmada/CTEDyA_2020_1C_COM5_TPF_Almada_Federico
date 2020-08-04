@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace juegoIA
 {
-    public class ComputerPlayer: Jugador
+     class ComputerPlayer: Jugador
     {
         Estado estado;
         private ArbolGeneral<Carta> miniMax = new ArbolGeneral<Carta>(new Carta(0, 0));	// arbol de todas las jugadas

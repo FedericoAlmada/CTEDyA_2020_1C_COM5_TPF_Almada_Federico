@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace juegoIA
 {
-	public abstract class Jugador
+	 abstract class Jugador
 	{
         protected Consulta consulta = new Consulta();
 
